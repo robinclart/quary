@@ -11,6 +11,10 @@ module Quary
 
     attr_reader :collection
 
+    def inspect
+      "#<#{self.class.name} conditions=#{@conditions.inspect}, limit=#{@limit.inspect}, order=#{@order.inspect}, group=#{@group.inspect}, index=#{@index.inspect}>"
+    end
+
     def query
       self
     end
