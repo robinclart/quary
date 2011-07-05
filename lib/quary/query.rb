@@ -1,13 +1,15 @@
 module Quary
-  class Query < Array
-    def initialize(db)
-      super
+  class Query
+    def initialize(collection = [])
+      @collection = collection
       @conditions = {}
       @limit = nil
       @order = nil
       @group = nil
       @reverse = false
     end
+
+    attr_reader :collection
 
     def query
       self
@@ -40,7 +42,7 @@ module Quary
     end
 
     def all
-      result = select do |e|
+      result = @collection.select do |e|
         @conditions.all? { |k,v| Regexp.new(v).match(e[k]) }
       end
       result.sort! { |a,b| a[@order] <=> b[@order] } if @order
