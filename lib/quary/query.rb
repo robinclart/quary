@@ -5,13 +5,14 @@ module Quary
       @conditions = {}
       @limit = nil
       @order = nil
+      @group = nil
       @reverse = false
     end
 
     def query
       self
     end
-  
+
     def where(conditions = {})
       @conditions = conditions
       self
@@ -32,7 +33,11 @@ module Quary
       end
       self
     end
-    alias :sort :order
+
+    def group(key)
+      @group = key
+      self
+    end
 
     def all
       result = select do |e|
@@ -40,8 +45,10 @@ module Quary
       end
       result.sort! { |a,b| a[@order] <=> b[@order] } if @order
       result.reverse! if @reverse
+      result = result.group_by { |e| e[@group] } if @group
       @limit ? result.slice(0, @limit) : result
     end
+    alias :to_a :all
 
     def each(*args, &block)
       all.each(*args, &block)
