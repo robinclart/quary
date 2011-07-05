@@ -1,6 +1,6 @@
 module Quary
   def query
-    ::Qhinary::Query.new(to_a)
+    ::Quary::Query.new(to_a)
   end
 
   %w[ where limit order sort all each first last size count ].each do |m|
