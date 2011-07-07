@@ -3,7 +3,7 @@ module Quary
     def initialize(collection = [])
       @collection = collection
       @conditions = {}
-      @limit = nil
+      @limit = collection.size
       @order = nil
       @group = nil
       @reverse = false
@@ -56,7 +56,7 @@ module Quary
       end
       result.sort! { |a,b| a[@order] <=> b[@order] } if @order
       result.reverse! if @reverse
-      result.slice!(@index, @limit) if @limit
+      result = result.slice(@index, @limit)
       @group.nil? ? result : result.group_by { |e| e[@group] }
     end
     alias :to_a :all
