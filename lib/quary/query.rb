@@ -30,8 +30,13 @@ module Quary
       self
     end
 
-    def from(number)
-      @index = number
+    def from(index)
+      @index = index
+      self
+    end
+
+    def to(index)
+      @limit = index - @index
       self
     end
 

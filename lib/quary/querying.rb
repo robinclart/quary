@@ -3,7 +3,7 @@ module Quary
     ::Quary::Query.new(to_a)
   end
 
-  %w[ where group limit from order all ].each do |m|
+  %w[ where group limit from to order all ].each do |m|
     module_eval <<-EOF
       def #{m}(*args, &block)
         query.#{m}(*args, &block)
