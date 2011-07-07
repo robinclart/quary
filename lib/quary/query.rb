@@ -57,12 +57,13 @@ module Quary
 
     def all
       result = @collection.select do |e|
-        @conditions.all? { |k,v| Regexp.new(v).match(e[k]) }
+        @conditions.all? { |k,v| access(e, k) =~ Regexp.new(v) }
       end
-      result.sort! { |a,b| a[@order] <=> b[@order] } if @order
-      result.reverse! if @reverse
+      result = result.sort { |a,b| access(a, @order) <=> access(b, @order) } if @order
+      result = result.reverse if @reverse
       result = result.slice(@index, @limit)
-      @group.nil? ? result : result.group_by { |e| e[@group] }
+      result = result.group_by { |e| access(e, @group) } if @group
+      result
     end
 
     def to_a
@@ -85,5 +86,11 @@ module Quary
       all.size
     end
     alias :count :size
+
+    private
+
+    def access(o, sym)
+      o.respond_to?(sym) ? o.send(sym) : o[sym]
+    end
   end
 end
