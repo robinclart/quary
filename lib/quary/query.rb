@@ -64,7 +64,10 @@ module Quary
       result = result.slice(@index, @limit)
       @group.nil? ? result : result.group_by { |e| e[@group] }
     end
-    alias :to_a :all
+
+    def to_a
+      all.to_a
+    end
 
     def each(*args, &block)
       all.each(*args, &block)
