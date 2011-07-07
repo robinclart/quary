@@ -6,6 +6,7 @@ module Quary
       @limit = nil
       @order = nil
       @group = nil
+      @reverse = false
       @index = 0
     end
 
@@ -34,16 +35,13 @@ module Quary
       self
     end
 
-    def order(key, direction = :asc)
+    def order(key)
       @order = key
-      @index = begin
-        case direction
-          when :asc then 0
-          when :desc then -1
-          when Number then direction
-          else 0
-        end
-      end
+      self
+    end
+
+    def reverse
+      @reverse = !@reverse
       self
     end
 
@@ -57,8 +55,9 @@ module Quary
         @conditions.all? { |k,v| Regexp.new(v).match(e[k]) }
       end
       result.sort! { |a,b| a[@order] <=> b[@order] } if @order
-      result = result.group_by { |e| e[@group] } if @group
-      @limit ? result.slice(@index, @limit) : result
+      result.reverse! if @reverse
+      result.slice!(@index, @limit) if @limit
+      @group.nil? ? result : result.group_by { |e| e[@group] }
     end
     alias :to_a :all
 
