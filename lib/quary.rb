@@ -91,6 +91,6 @@ class Quary
   private
 
   def access(o, sym)
-    o.respond_to?(sym) ? o.send(sym) : o[sym]
+    o.respond_to?(:[]) ? o[sym] : (o.respond_to?(sym) ? o.send(sym) : nil)
   end
 end
