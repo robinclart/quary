@@ -1,3 +1,5 @@
+require "quary"
+
 module Quaryable
   def query
     ::Quary.new(to_a)
